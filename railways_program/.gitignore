@@ -72,3 +72,8 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+# QT STUFF
+*build*
+../build-railways-Desktop-Debug/
+*.txt
+

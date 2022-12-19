@@ -74,5 +74,6 @@ CMakeLists.txt.user*
 
 # QT STUFF
 *build-*
+../build-railways-Desktop-Debug/
 *.txt
 

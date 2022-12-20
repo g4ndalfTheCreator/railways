@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 #include <ctype.h>
+#include <fstream>
 
 #include <datastructures.hh>
 
@@ -29,9 +30,12 @@ private:
     // NON-UI functionality
 
     bool commands_amount_checker(std::vector<std::string> commands, int wanted_size);
+    void command_parser(std::string command);
 
 
     // Functions that create ui.
+    void read_file(std::vector<std::string> commands);
+    void help();
     void clear_all();
     void station_count();
     void all_stations();

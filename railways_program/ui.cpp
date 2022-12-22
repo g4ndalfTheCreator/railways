@@ -36,6 +36,9 @@ void Ui::command_parser(std::string input){
 
     std::transform(command.begin(), command.end(), command.begin(), [](unsigned char c){return std::tolower(c); });
 
+    std::cout << std::endl; // Ends current line
+
+
     if(command == "end"){
         // Ends loop
 
@@ -43,6 +46,7 @@ void Ui::command_parser(std::string input){
 
         return;
     }
+
 
     else if(command == "read") read_file(commands);
     else if(command == "help") help();
@@ -52,6 +56,22 @@ void Ui::command_parser(std::string input){
     else if(command == "add_station") add_station(commands);
     else if(command == "get_station_name") get_station_name(commands);
     else if(command == "get_station_coord") get_station_coord(commands);
+    else if(command == "find_station_with_coord") find_station_with_coord(commands);
+    else if(command == "change_station_coord") change_station_coord(commands);
+    else if(command == "add_departure") add_departure(commands);
+    else if(command == "remove_departure") remove_departure(commands);
+    else if(command == "station_departures_after") station_departures_after(commands);
+    else if(command == "add_region") add_region(commands);
+    else if(command == "all_regions") all_regions();
+    else if(command == "get_region_name") get_region_name(commands);
+    else if(command == "get_region_coords") get_region_coords(commands);
+    else if(command == "add_subregion_to_region") add_subregion_to_region(commands);
+    else if(command == "add_station_to_region") add_station_to_region(commands);
+    else if(command == "station_in_regions") station_in_regions(commands);
+    else if(command == "all_subregions_of_region") all_subregions_of_region(commands);
+    else if(command == "stations_closest_to") stations_closest_to(commands);
+    else if(command == "remove_station") remove_station(commands);
+    else if(command == "common_parent_of_regions") common_parent_of_regions(commands);
 
     else{
 
@@ -269,3 +289,71 @@ void Ui::get_station_coord(std::vector<std::string> commands){
 
 }
 
+/**
+ * @brief Ui::find_station_with_coord
+ * @param commands
+ */
+void Ui::find_station_with_coord( std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+
+void Ui::change_station_coord(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::add_departure(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::remove_departure(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::station_departures_after(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::add_region(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::all_regions(){
+    std::cout << std::endl;
+}
+
+void Ui::get_region_name(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::get_region_coords(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::add_subregion_to_region(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::add_station_to_region(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::station_in_regions(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::all_subregions_of_region(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::stations_closest_to(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::remove_station(std::vector<std::string> commands){
+    std::cout << std::endl;
+}
+
+void Ui::common_parent_of_regions(std::vector<std::string> commands){
+    std::cout << std::endl;
+}

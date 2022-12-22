@@ -31,6 +31,7 @@ private:
 
     bool commands_amount_checker(std::vector<std::string> commands, int wanted_size);
     void command_parser(std::string command);
+    Coord coord_transformer(std::string str_coord);
 
 
     // Functions that create ui.

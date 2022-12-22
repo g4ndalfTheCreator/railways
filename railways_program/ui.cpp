@@ -125,6 +125,47 @@ bool Ui::commands_amount_checker(std::vector<std::string> commands, int wanted_s
 }
 
 /**
+ * @brief Ui::coord_transformer Makes tranform of coord
+ * @return Coordinatified value.
+ */
+Coord Ui::coord_transformer(std::string str_coord){
+
+    // Values for intifier
+    std::string xstr;
+    std::string ystr;
+    bool x_done = false;
+
+
+    for(char c : str_coord){
+        // Transforms characters to  numbers.
+
+        if(c == ','){
+            x_done = true;
+        }
+
+        if(std::isdigit(c)){
+
+            if(x_done){
+                ystr.push_back(c);
+            }
+
+            else{
+                xstr.push_back(c);
+            }
+        }
+    }
+
+    if(xstr.size() == 0 or ystr.size() == 0) return NO_COORD;
+
+    int x = std::stoi(xstr);
+    int y = std::stoi(ystr);
+
+
+    return {x, y};
+
+}
+
+/**
  * @brief Ui::read_stations reads a file containig commands.
  */
 void Ui::read_file(std::vector<std::string> commands){
@@ -214,37 +255,10 @@ void Ui::add_station(std::vector<std::string> commands){
 
     StationID id = commands[1];
     Name name = commands[2];
-
-    // Values for intifier
-    std::string xstr;
-    std::string ystr;
-    bool x_done = false;
-
-
-    for(char c : commands[3]){
-        // Transforms characters to  numbers.
-
-        if(c == ','){
-            x_done = true;
-        }
-
-        if(std::isdigit(c)){
-
-            if(x_done){
-                ystr.push_back(c);
-            }
-
-            else{
-                xstr.push_back(c);
-            }
-        }
-    }
-
-    int x = std::stoi(xstr);
-    int y = std::stoi(ystr);
+    Coord xy = coord_transformer(commands[3]);
 
     // Adds values and shows messages accordingly.
-    bool status = datastructures_.add_station(id, name, {x, y});
+    bool status = datastructures_.add_station(id, name, xy);
 
     if(status){
 
@@ -290,11 +304,24 @@ void Ui::get_station_coord(std::vector<std::string> commands){
 }
 
 /**
- * @brief Ui::find_station_with_coord
- * @param commands
+ * @brief Ui::find_station_with_coord finds a station with coord
+ * @param commands get parameters from commands.
  */
 void Ui::find_station_with_coord( std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 2)) return;
+
+    Coord xy = coord_transformer(commands[1]);
+
+    // Searches for info and after that prints details
+    StationID id = datastructures_.find_station_with_coord(xy);
+
+    if(id == NO_STATION){
+        std::cout << "No station in this xy location" << std::endl;
+        return;
+    }
+
+    std::cout << "Found a station with id: " << id << std::endl;
 }
 
 

@@ -40,8 +40,8 @@ private:
     void station_count();
     void all_stations();
     void add_station(std::vector<std::string> commands);
-    void get_station_name(StationID id);
-    void get_station_coord(StationID id);
+    void get_station_name(std::vector<std::string> commands);
+    void get_station_coord(std::vector<std::string> commands);
 
 
 };

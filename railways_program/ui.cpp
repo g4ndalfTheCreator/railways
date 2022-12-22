@@ -50,8 +50,8 @@ void Ui::command_parser(std::string input){
     else if(command == "clear_all") clear_all();
     else if(command == "all_stations") all_stations();
     else if(command == "add_station") add_station(commands);
-    else if(command == "get_station_name");
-    else if(command == "get_station_coord");
+    else if(command == "get_station_name") get_station_name(commands);
+    else if(command == "get_station_coord") get_station_coord(commands);
 
     else{
 
@@ -170,7 +170,7 @@ void Ui::all_stations(){
 
     int counter = 1;
 
-    for(StationID id : ids){
+    for(StationID& id : ids){
 
         Name name = datastructures_.get_station_name(id);
         Coord xy = datastructures_.get_station_coordinates(id);
@@ -237,4 +237,35 @@ void Ui::add_station(std::vector<std::string> commands){
     }
 }
 
+/**
+ * @brief Ui::get_station_name Prints out stations name
+ * @param id From this station we are printing
+ */
+void Ui::get_station_name(std::vector<std::string> commands){
+
+     if(commands_amount_checker(commands, 2)) return;
+
+    StationID id = commands[1];
+
+    Name name = datastructures_.get_station_name(id);
+
+    std::cout << "Name for \"" << id << "\" is: " << name << std::endl;
+
+}
+
+/**
+ * @brief Ui::get_station_coord Gets stations location and prints it out
+ * @param commands get parameters from commands.
+ */
+void Ui::get_station_coord(std::vector<std::string> commands){
+
+     if(commands_amount_checker(commands, 2)) return;
+
+    StationID id = commands[1];
+
+    Coord xy = datastructures_.get_station_coordinates(id);
+
+    std::cout << "Location for \"" << id << "\" is: " << xy.x << " and " << xy.y << std::endl;
+
+}
 

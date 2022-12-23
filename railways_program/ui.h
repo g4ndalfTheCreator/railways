@@ -41,8 +41,7 @@ private:
     void station_count();
     void all_stations();
     void add_station(std::vector<std::string> commands);
-    void get_station_name(std::vector<std::string> commands);
-    void get_station_coord(std::vector<std::string> commands);
+    void station_info(std::vector<std::string> commands);
     void stations_alphabetically();
     void stations_distance_increasing();
     void find_station_with_coord(std::vector<std::string> commands);
@@ -52,8 +51,7 @@ private:
     void station_departures_after(std::vector<std::string> commands);
     void add_region(std::vector<std::string> commands);
     void all_regions();
-    void get_region_name(std::vector<std::string> commands);
-    void get_region_coords(std::vector<std::string> commands);
+    void region_info(std::vector<std::string> commands);
     void add_subregion_to_region(std::vector<std::string> commands);
     void add_station_to_region(std::vector<std::string> commands);
     void station_in_regions(std::vector<std::string> commands);

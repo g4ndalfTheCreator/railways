@@ -11,13 +11,14 @@ void Ui::command_parser(std::string input){
 
     std::vector<std::string> commands;
     std::string c_command;
+    bool unify_input = false;
 
 
     for(char c : input){
 
         std::cout << c;
 
-        if(c == ' '){
+        if(c == ' ' and !unify_input){
 
             commands.push_back(c_command);
             c_command = "";
@@ -28,8 +29,11 @@ void Ui::command_parser(std::string input){
             c_command.push_back(c);
         }
 
-
+        else{
+            unify_input = !unify_input;
+        }
     }
+
     commands.push_back(c_command);
 
     std::string command = *commands.begin();
@@ -54,8 +58,7 @@ void Ui::command_parser(std::string input){
     else if(command == "clear_all") clear_all();
     else if(command == "all_stations") all_stations();
     else if(command == "add_station") add_station(commands);
-    else if(command == "get_station_name") get_station_name(commands);
-    else if(command == "get_station_coord") get_station_coord(commands);
+    else if(command == "station_info") station_info(commands);
     else if(command == "find_station_with_coord") find_station_with_coord(commands);
     else if(command == "change_station_coord") change_station_coord(commands);
     else if(command == "add_departure") add_departure(commands);
@@ -63,8 +66,7 @@ void Ui::command_parser(std::string input){
     else if(command == "station_departures_after") station_departures_after(commands);
     else if(command == "add_region") add_region(commands);
     else if(command == "all_regions") all_regions();
-    else if(command == "get_region_name") get_region_name(commands);
-    else if(command == "get_region_coords") get_region_coords(commands);
+    else if(command == "region_info") region_info(commands);
     else if(command == "add_subregion_to_region") add_subregion_to_region(commands);
     else if(command == "add_station_to_region") add_station_to_region(commands);
     else if(command == "station_in_regions") station_in_regions(commands);
@@ -170,7 +172,7 @@ Coord Ui::coord_transformer(std::string str_coord){
  */
 void Ui::read_file(std::vector<std::string> commands){
 
-    if(commands_amount_checker(commands, 2)) return;
+    //if(commands_amount_checker(commands, 2)) return;
 
     std::string filename = commands[1];
 
@@ -275,32 +277,17 @@ void Ui::add_station(std::vector<std::string> commands){
  * @brief Ui::get_station_name Prints out stations name
  * @param id From this station we are printing
  */
-void Ui::get_station_name(std::vector<std::string> commands){
+void Ui::station_info(std::vector<std::string> commands){
 
      if(commands_amount_checker(commands, 2)) return;
 
     StationID id = commands[1];
 
     Name name = datastructures_.get_station_name(id);
-
-    std::cout << "Name for \"" << id << "\" is: " << name << std::endl;
-
-}
-
-/**
- * @brief Ui::get_station_coord Gets stations location and prints it out
- * @param commands get parameters from commands.
- */
-void Ui::get_station_coord(std::vector<std::string> commands){
-
-     if(commands_amount_checker(commands, 2)) return;
-
-    StationID id = commands[1];
-
     Coord xy = datastructures_.get_station_coordinates(id);
 
-    std::cout << "Location for \"" << id << "\" is: " << xy.x << " and " << xy.y << std::endl;
-
+    std::cout << "Name for \"" << id << "\" is: " << name;
+    std::cout << " Location for it is: " << xy.x << "," << xy.y << std::endl;
 }
 
 /**
@@ -396,23 +383,17 @@ void Ui::remove_departure(std::vector<std::string> commands){
 void Ui::station_departures_after(std::vector<std::string> commands){
 
 
-    if(commands_amount_checker(commands, 4)) return;
+    if(commands_amount_checker(commands, 3)) return;
 
     StationID id = commands[1];
     Time time = std::stoi(commands[2]);
 
     std::vector<std::pair<Time,TrainID>> time_trains = datastructures_.station_departures_after(id, time);
 
-    if(time_trains[0].first == NO_TIME and time_trains[0].second == NO_TRAIN){
-        std::cout << "No trains leaving from this station after selected time." << std::endl;
+    for(auto& current : time_trains){
+        std::cout << "Time: " << current.first << " Train: " << current.second << std::endl;
     }
 
-    else{
-
-        for(auto& current : time_trains){
-            std::cout << "Time: " << current.first << " Train: " << current.second << std::endl;
-        }
-    }
 }
 
 /**
@@ -422,7 +403,10 @@ void Ui::station_departures_after(std::vector<std::string> commands){
 void Ui::add_region(std::vector<std::string> commands){
 
     // Checks if command has right amount of parameters
-    if(commands_amount_checker(commands, 4)) return;
+    if(commands.size() < 5){
+        commands_amount_checker(commands, 5);
+        return;
+    }
 
     RegionID id = stoi(commands[1]);
     Name name = commands[2];
@@ -472,7 +456,7 @@ void Ui::all_regions(){
  * @brief Ui::get_region_name Prints regions name.
  * @param commands
  */
-void Ui::get_region_name(std::vector<std::string> commands){
+void Ui::region_info(std::vector<std::string> commands){
 
    if(commands_amount_checker(commands, 2)) return;
 
@@ -480,30 +464,20 @@ void Ui::get_region_name(std::vector<std::string> commands){
 
    Name name = datastructures_.get_region_name(id);
 
-   std::cout << "Name for \"" << id << "\" is: " << name << std::endl;
+   std::cout << "Name for \"" << id << "\" is: " << name;
+
+   std::vector<Coord> coords = datastructures_.get_region_coords(id);
+
+   std::cout << " and Coords for \"" << id << "\" are: ";
+
+   for(Coord xy : coords){
+
+       std::cout << xy.x << "," << xy.y << " ";
+   }
+
+   std::cout << std::endl;
 }
 
-/**
- * @brief Ui::get_region_coords Prints regions borders point locations.
- * @param commands
- */
-void Ui::get_region_coords(std::vector<std::string> commands){
-
-    if(commands_amount_checker(commands, 2)) return;
-
-    RegionID id = stoi(commands[1]);
-
-    std::vector<Coord> coords = datastructures_.get_region_coords(id);
-
-    std::cout << "Coords for \"" << id << "\" are: ";
-
-    for(Coord xy : coords){
-
-        std::cout << xy.x << "," << xy.y << " ";
-    }
-
-    std::cout << std::endl;
-}
 
 /**
  * @brief Ui::add_subregion_to_region adds subregion to upper parent region
@@ -555,16 +529,74 @@ void Ui::add_station_to_region(std::vector<std::string> commands){
     }
 }
 
+/**
+ * @brief Ui::station_in_regions Prints out regions that a stations belongs to.
+ * @param commands
+ */
 void Ui::station_in_regions(std::vector<std::string> commands){
+
+    if(commands_amount_checker(commands, 2)) return;
+
+    StationID id = commands[1];
+
+    std::vector<RegionID> regions = datastructures_.station_in_regions(id);
+
+    std::cout << "This station belongs to following regions: ";
+
+    for(RegionID c : regions){
+
+        std::cout << c << " ";
+
+    }
+
     std::cout << std::endl;
+
 }
 
+/**
+ * @brief Ui::all_subregions_of_region shows all
+ * @param commands
+ */
 void Ui::all_subregions_of_region(std::vector<std::string> commands){
+
+    if(commands_amount_checker(commands, 2)) return;
+
+    RegionID id = stoi(commands[1]);
+
+    std::vector<RegionID> regions = datastructures_.all_subregions_of_region(id);
+
+    std::cout << "This station belongs to following regions: ";
+
+    for(RegionID c : regions){
+
+        std::cout << c << " ";
+    }
+
     std::cout << std::endl;
 }
 
 void Ui::stations_closest_to(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 2)) return;
+
+    Coord xy = coord_transformer(commands[1]);
+
+    std::vector<StationID> top3_stations = datastructures_.stations_closest_to(xy);
+
+    int counter = 1;
+
+
+    for(StationID& id : top3_stations){
+
+        Name name = datastructures_.get_station_name(id);
+        Coord xy = datastructures_.get_station_coordinates(id);
+
+        std::cout << counter << ". Station id: " << id << " goes by name " << name << " and its location: {" << xy.x << "," << xy.y << "}"
+                  << std::endl;
+
+        counter++;
+    }
+
 }
 
 void Ui::remove_station(std::vector<std::string> commands){

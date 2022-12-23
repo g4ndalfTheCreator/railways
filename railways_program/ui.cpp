@@ -388,18 +388,82 @@ void Ui::remove_departure(std::vector<std::string> commands){
         std::cout << "Failure! Could not remove train!" << std::endl;
     }
 }
-}
 
+/**
+ * @brief Ui::station_departures_after Prints out departures after selevted time
+ * @param commands
+ */
 void Ui::station_departures_after(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+
+    if(commands_amount_checker(commands, 4)) return;
+
+    StationID id = commands[1];
+    Time time = std::stoi(commands[2]);
+
+    std::vector<std::pair<Time,TrainID>> time_trains = datastructures_.station_departures_after(id, time);
+
+    if(time_trains[0].first == NO_TIME and time_trains[0].second == NO_TRAIN){
+        std::cout << "No trains leaving from this station after selected time." << std::endl;
+    }
+
+    else{
+
+        for(auto& current : time_trains){
+            std::cout << "Time: " << current.first << " Train: " << current.second << std::endl;
+        }
+    }
 }
 
+/**
+ * @brief Ui::add_region to db
+ * @param commands
+ */
 void Ui::add_region(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    // Checks if command has right amount of parameters
+    if(commands_amount_checker(commands, 4)) return;
+
+    RegionID id = stoi(commands[1]);
+    Name name = commands[2];
+    std::vector<Coord> coords;
+
+    for(long unsigned int i = 3; i < commands.size(); i++){
+        coords.push_back(coord_transformer(commands[i]));
+    }
+
+    // Adds values and shows messages accordingly.
+    bool status = datastructures_.add_region(id, name, coords);
+
+    if(status){
+
+        std::cout << "You have succesfully added a station: " << name << std::endl;
+    }
+
+    else{
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+    }
 }
 
 void Ui::all_regions(){
-    std::cout << std::endl;
+
+
+    std::vector<RegionID> ids = datastructures_.all_regions();
+    int count_of_regions = ids.size();
+    std::cout << "Currently you have " << count_of_regions << " regions in your datastrucutres. Here is a list of them all:" << std::endl;
+
+    int counter = 1;
+
+    for(RegionID& id : ids){
+
+        Name name = datastructures_.get_region_name(id);
+
+        std::cout << counter << ". Region id: " << id << " goes by name " << name << std::endl;
+
+        counter++;
+    }
+
 }
 
 void Ui::get_region_name(std::vector<std::string> commands){

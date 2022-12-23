@@ -324,17 +324,70 @@ void Ui::find_station_with_coord( std::vector<std::string> commands){
     std::cout << "Found a station with id: " << id << std::endl;
 }
 
-
+/**
+ * @brief Ui::change_station_coord Changes a stations coordinate
+ * @param commands Changes by these commands
+ */
 void Ui::change_station_coord(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+
+    if(commands_amount_checker(commands, 3)) return;
+
+    StationID id = commands[1];
+    Coord xy = coord_transformer(commands[2]);
+
+    bool status = datastructures_.change_station_coord(id, xy);
+
+    if(status){
+        std::cout << id << " Changing coord to " << xy.x << ", " << xy.y << std::endl;
+    }
+
+    else{
+        std::cout << "Failure! Could not change coord!" << std::endl;
+    }
 }
 
+/**
+ * @brief Ui::add_departure Adds a departure to station and shows info about it
+ * @param commands uses these parameters
+ */
 void Ui::add_departure(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 4)) return;
+
+    StationID id = commands[1];
+    TrainID id_t = commands[2];
+    Time time = std::stoi(commands[3]);
+
+    bool status = datastructures_.add_departure(id, id_t, time);
+
+    if(status){
+        std::cout << id_t << " added to " << id << "with leaving time: " << time << std::endl;
+    }
+
+    else{
+        std::cout << "Failure! Could not add train!" << std::endl;
+    }
 }
 
 void Ui::remove_departure(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 4)) return;
+
+    StationID id = commands[1];
+    TrainID id_t = commands[2];
+    Time time = std::stoi(commands[3]);
+
+    bool status = datastructures_.remove_departure(id, id_t, time);
+
+    if(status){
+        std::cout << id_t << " removed from " << id << "with leaving time: " << time << std::endl;
+    }
+
+    else{
+        std::cout << "Failure! Could not remove train!" << std::endl;
+    }
+}
 }
 
 void Ui::station_departures_after(std::vector<std::string> commands){

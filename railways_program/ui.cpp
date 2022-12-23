@@ -446,6 +446,9 @@ void Ui::add_region(std::vector<std::string> commands){
     }
 }
 
+/**
+ * @brief Ui::all_regions prints out all regions
+ */
 void Ui::all_regions(){
 
 
@@ -463,23 +466,93 @@ void Ui::all_regions(){
 
         counter++;
     }
-
 }
 
+/**
+ * @brief Ui::get_region_name Prints regions name.
+ * @param commands
+ */
 void Ui::get_region_name(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+   if(commands_amount_checker(commands, 2)) return;
+
+   RegionID id = stoi(commands[1]);
+
+   Name name = datastructures_.get_region_name(id);
+
+   std::cout << "Name for \"" << id << "\" is: " << name << std::endl;
 }
 
+/**
+ * @brief Ui::get_region_coords Prints regions borders point locations.
+ * @param commands
+ */
 void Ui::get_region_coords(std::vector<std::string> commands){
+
+    if(commands_amount_checker(commands, 2)) return;
+
+    RegionID id = stoi(commands[1]);
+
+    std::vector<Coord> coords = datastructures_.get_region_coords(id);
+
+    std::cout << "Coords for \"" << id << "\" are: ";
+
+    for(Coord xy : coords){
+
+        std::cout << xy.x << "," << xy.y << " ";
+    }
+
     std::cout << std::endl;
 }
 
+/**
+ * @brief Ui::add_subregion_to_region adds subregion to upper parent region
+ * @param commands
+ */
 void Ui::add_subregion_to_region(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 3)) return;
+
+    RegionID id = stoi(commands[1]);
+    RegionID id_parent = stoi(commands[2]);
+
+    bool status = datastructures_.add_subregion_to_region(id, id_parent);
+
+
+    if(status){
+
+        std::cout << "You have succesfully region: " << id << " as subregion of " << id_parent << std::endl;
+    }
+
+    else{
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+    }
 }
 
+/**
+ * @brief Ui::add_station_to_region adds station to region
+ * @param commands
+ */
 void Ui::add_station_to_region(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    if(commands_amount_checker(commands, 3)) return;
+
+    StationID stat_id = commands[1];
+    RegionID reg_id = stoi(commands[2]);
+
+    bool status = datastructures_.add_station_to_region(stat_id, reg_id);
+
+
+    if(status){
+
+        std::cout << "You have succesfully station: " << stat_id << " to this region" << reg_id << std::endl;
+    }
+
+    else{
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+    }
 }
 
 void Ui::station_in_regions(std::vector<std::string> commands){

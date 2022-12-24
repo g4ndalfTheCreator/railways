@@ -9,6 +9,7 @@
 #include <sstream>
 #include <ctype.h>
 #include <fstream>
+#include <stdlib.h>
 
 #include <datastructures.hh>
 
@@ -59,6 +60,18 @@ private:
     void stations_closest_to(std::vector<std::string> commands);
     void remove_station(std::vector<std::string> commands);
     void common_parent_of_regions(std::vector<std::string> commands);
+
+    void clear_trains();
+    void add_train(std::vector<std::string> commands);
+    void next_stations_from(std::vector<std::string> commands);
+    void train_stations_from(std::vector<std::string> commands);
+    void route_any(std::vector<std::string> commands);
+    void route_least_stations(std::vector<std::string> commands);
+    void route_with_cycle(std::vector<std::string> commands);
+    void route_shortest_distance(std::vector<std::string> commands);
+    void route_earliest_arrival(std::vector<std::string> commands);
+
+
 };
 
 #endif // UI_H

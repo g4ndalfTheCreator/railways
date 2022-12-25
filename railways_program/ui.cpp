@@ -754,8 +754,6 @@ void Ui::add_train(std::vector<std::string> commands){
 
         stationtimes.push_back({station, time});
 
-        std::cout << station << time << std::endl;
-
     }
 
     // Adds values and shows messages accordingly.
@@ -787,7 +785,7 @@ void Ui::next_stations_from(std::vector<std::string> commands){
     std::vector<StationID> next_stations = datastructures_.next_stations_from(this_id);
 
 
-    if(this_id == NO_STATION){
+    if(*next_stations.begin() == NO_STATION){
 
         std::cout << "There are no stations after this station" << std::endl;
 
@@ -810,26 +808,239 @@ void Ui::next_stations_from(std::vector<std::string> commands){
     }
 }
 
+/**
+ * @brief Ui::train_stations_from Gets trains next stations after a selected train has passed given station
+ * @param commands
+ */
 void Ui::train_stations_from(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 3);
+
+    StationID this_id = commands[1];
+    TrainID train_id = commands[2];
+
+    Name this_name = datastructures_.get_station_name(this_id);
+
+    std::vector<StationID> stations = datastructures_.train_stations_from(this_id, train_id);
+
+
+    if(*stations.begin() == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else{
+
+        std::cout << "After train: " << train_id << " passed " << this_name << " next stations are: " << std::endl;
+
+        int counter = 1;
+
+        for(StationID& c_station : stations){
+
+            Name c_name = datastructures_.get_station_name(c_station);
+
+            std::cout << counter << ". " << c_name << " ID: " << c_station << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::route_any(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 3);
+
+    StationID id_1 = commands[1];
+    StationID id_2 = commands[2];
+
+    Name name_1 = datastructures_.get_station_name(id_1);
+    Name name_2 = datastructures_.get_station_name(id_2);
+
+    std::vector<std::pair<StationID, Distance>> stations_distances = datastructures_.route_any(id_1, id_2);
+
+
+    if(stations_distances.begin()->first == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else if(stations_distances.size() == 0){
+        std::cout << "There is no route between asked stations" << std::endl;
+    }
+
+    else{
+
+        std::cout << "After " << name_1 << " route to " << name_2 << "is: " << std::endl;
+
+        int counter = 1;
+
+        for(auto& c : stations_distances){
+
+            Name c_name = datastructures_.get_station_name(c.first);
+
+            std::cout << counter << ". " << c_name << " ID: " << c.first << " Distance from the first station: " << c.second << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::route_least_stations(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 3);
+
+    StationID id_1 = commands[1];
+    StationID id_2 = commands[2];
+
+    Name name_1 = datastructures_.get_station_name(id_1);
+    Name name_2 = datastructures_.get_station_name(id_2);
+
+    std::vector<std::pair<StationID, Distance>> stations_distances = datastructures_.route_least_stations(id_1, id_2);
+
+    if(stations_distances.begin()->first == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else if(stations_distances.size() == 0){
+        std::cout << "There is no route between asked stations" << std::endl;
+    }
+
+    else{
+
+        std::cout << "After " << name_1 << " route to " << name_2 << "is: " << std::endl;
+
+        int counter = 1;
+
+        for(auto& c : stations_distances){
+
+            Name c_name = datastructures_.get_station_name(c.first);
+
+            std::cout << counter << ". " << c_name << " ID: " << c.first << " Distance from the first station: " << c.second << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::route_with_cycle(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 2);
+
+    StationID id_1 = commands[1];
+
+    Name name_1 = datastructures_.get_station_name(id_1);
+
+    std::vector<StationID> stations_distances = datastructures_.route_with_cycle(id_1);
+
+
+    if(*stations_distances.begin() == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else if(stations_distances.size() == 0){
+        std::cout << "There is no cycle in asked stations" << std::endl;
+    }
+
+    else{
+
+        std::cout << "Cyclic route from" << name_1 << " is: " << std::endl;
+
+        int counter = 1;
+
+        for(auto& c : stations_distances){
+
+            Name c_name = datastructures_.get_station_name(c);
+
+            std::cout << counter << ". " << c_name << " ID: " << c << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::route_shortest_distance(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 3);
+
+    StationID id_1 = commands[1];
+    StationID id_2 = commands[2];
+
+    Name name_1 = datastructures_.get_station_name(id_1);
+    Name name_2 = datastructures_.get_station_name(id_2);
+
+    std::vector<std::pair<StationID, Distance>> stations_distances = datastructures_.route_shortest_distance(id_1, id_2);
+
+
+    if(stations_distances.begin()->first == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else if(stations_distances.size() == 0){
+        std::cout << "There is no route between asked stations" << std::endl;
+    }
+
+    else{
+
+        std::cout << "After " << name_1 << " shortest route to " << name_2 << "is: " << std::endl;
+
+        int counter = 1;
+
+        for(auto& c : stations_distances){
+
+            Name c_name = datastructures_.get_station_name(c.first);
+
+            std::cout << counter << ". " << c_name << " ID: " << c.first << " Distance from the first station: " << c.second << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::route_earliest_arrival(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 3);
+
+    StationID id_1 = commands[1];
+    StationID id_2 = commands[2];
+    Time starttime = stoi(commands[3]);
+
+    Name name_1 = datastructures_.get_station_name(id_1);
+    Name name_2 = datastructures_.get_station_name(id_2);
+
+    std::vector<std::pair<StationID, Time>> stations_distances = datastructures_.route_earliest_arrival(id_1, id_2, starttime);
+
+
+    if(stations_distances.begin()->first == NO_STATION){
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+
+    }
+
+    else if(stations_distances.size() == 0){
+        std::cout << "There is no route between asked stations" << std::endl;
+    }
+
+    else{
+
+        std::cout << "After " << name_1 << " route to " << name_2 << "is: " << std::endl;
+
+        int counter = 1;
+
+        for(auto& c : stations_distances){
+
+            Name c_name = datastructures_.get_station_name(c.first);
+
+            std::cout << counter << ". " << c_name << " ID: " << c.first << " Leaving time from this station is: " << c.second << std::endl;
+
+            counter++;
+        }
+    }
 }

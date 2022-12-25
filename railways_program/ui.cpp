@@ -38,7 +38,6 @@ void Ui::command_parser(std::string input){
 
     std::transform(command.begin(), command.end(), command.begin(), [](unsigned char c){return std::tolower(c); });
 
-    std::cout << std::endl; // Ends current line
 
 
     if(command == "end"){
@@ -678,6 +677,10 @@ void Ui::remove_station(std::vector<std::string> commands){
     }
 }
 
+/**
+ * @brief Ui::common_parent_of_regions Gets common parent of two regions
+ * @param commands
+ */
 void Ui::common_parent_of_regions(std::vector<std::string> commands){
 
     if(commands_amount_checker(commands, 3)) return;
@@ -699,17 +702,112 @@ void Ui::common_parent_of_regions(std::vector<std::string> commands){
     }
 }
 
-
+/**
+ * @brief Ui::clear_trains Clears out all the trains in the ds
+ */
 void Ui::clear_trains(){
-    std::cout << std::endl;
+
+    datastructures_.clear_trains();
+
+    std::cout << "All trains have been deleted from the datastructure" <<std::endl;
 }
 
+/**
+ * @brief Ui::add_train Adds a train in datastrucutres
+ * @param commands
+ */
 void Ui::add_train(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    // Checks if command has right amount of parameters
+    if(commands.size() < 3){
+        commands_amount_checker(commands, 3);
+        return;
+    }
+
+    TrainID id = commands[1];
+    std::vector<std::pair<StationID,Time>> stationtimes;
+
+    for(long unsigned int i = 2; i < commands.size(); i++){
+        // Values for intifier
+        StationID station;
+        std::string time_s;
+
+        for(char c : commands[i]){
+            // Transforms characters to  numbers.
+
+            if(std::isdigit(c)){
+
+                time_s.push_back(c);
+
+
+            }
+
+            else if( c != ':' and c != ' '){
+
+                station.push_back(c);
+            }
+
+
+        }
+
+        Time time = std::stoi(time_s);
+
+        stationtimes.push_back({station, time});
+
+        std::cout << station << time << std::endl;
+
+    }
+
+    // Adds values and shows messages accordingly.
+    bool status = datastructures_.add_train(id, stationtimes);
+
+    if(status){
+
+        std::cout << "You have succesfully added a train: " << id << std::endl;
+    }
+
+    else{
+
+        std::cout << "Unfortunately something went wrong" << std::endl;
+    }
 }
 
+/**
+ * @brief Ui::next_stations_from Prints out following stations of this station
+ * @param commands
+ */
 void Ui::next_stations_from(std::vector<std::string> commands){
-    std::cout << std::endl;
+
+    commands_amount_checker(commands, 2);
+
+    StationID this_id = commands[1];
+
+    Name this_name = datastructures_.get_station_name(this_id);
+
+    std::vector<StationID> next_stations = datastructures_.next_stations_from(this_id);
+
+
+    if(this_id == NO_STATION){
+
+        std::cout << "There are no stations after this station" << std::endl;
+
+    }
+
+    else{
+
+        std::cout << "After passing " << this_name << " next stations are: " << std::endl;
+
+        int counter = 1;
+
+        for(StationID& c_station : next_stations){
+
+            Name c_name = datastructures_.get_station_name(c_station);
+
+            std::cout << counter << ". " << c_name << " ID: " << c_station << std::endl;
+
+            counter++;
+        }
+    }
 }
 
 void Ui::train_stations_from(std::vector<std::string> commands){
